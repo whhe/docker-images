@@ -1,0 +1,30 @@
+name: build oceanbase-ce image
+
+on:
+  workflow_call:
+    inputs:
+      cache_key:
+        required: true
+        type: string
+      image_file:
+        required: true
+        type: string
+
+jobs:
+  build-oceanbase-ce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: ./oceanbase-ce/docker_build.sh
+
+      - name: Export Docker image
+        run: docker save -o ${{ inputs.image_file }} oceanbase-ce
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.cache_key }}
+          path: ${{ inputs.image_file }}
