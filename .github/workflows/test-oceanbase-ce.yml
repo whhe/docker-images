@@ -2,7 +2,7 @@ name: test oceanbase-ce
 
 on:
   push:
-    branches: [ main ]
+    branches: [ '**' ]
   pull_request:
     paths:
       - '.github/workflows/**-oceanbase-ce.yml'
@@ -33,7 +33,6 @@ jobs:
           path: oceanbase-ce.tar
 
   test-slim:
-    needs: build-image
     uses: ./.github/workflows/java-test-oceanbase-ce.yml
     with:
       cache_key: oceanbase-ce
