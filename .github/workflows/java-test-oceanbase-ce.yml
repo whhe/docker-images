@@ -44,25 +44,6 @@ jobs:
   test-oceanbase-ce:
     runs-on: ubuntu-latest
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ inputs.cache_key }}
-          path: /tmp
-
-      - name: Load Docker image
-        run: docker load -i /tmp/${{ inputs.image_file }}
-
-      - name: Start Docker container
-        uses: oceanbase/setup-oceanbase-ce@v1
-        with:
-          image_name: oceanbase-ce
-          mode: ${{ inputs.mode }}
-          sql_port: ${{ inputs.port }}
-          sys_root_password: ${{ inputs.sys_password }}
-          tenant_name: ${{ inputs.test_tenant }}
-          init_sql: ${{ inputs.init_sql }}
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
