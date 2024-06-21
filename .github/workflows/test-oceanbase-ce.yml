@@ -9,15 +9,31 @@ on:
       - 'oceanbase-ce/**'
       - 'test/**'
 
+concurrency:
+  group: test-oceanbase-ce-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
-    uses: ./.github/workflows/build-oceanbase-ce.yml
-    with:
-      cache_key: oceanbase-ce
-      image_file: oceanbase-ce.tar
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: ./oceanbase-ce/docker_build.sh
+
+      - name: Export Docker image
+        run: docker save -o oceanbase-ce.tar oceanbase-ce
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: oceanbase-ce
+          path: oceanbase-ce.tar
 
   test-slim:
-    needs: build
+    needs: build-image
     uses: ./.github/workflows/java-test-oceanbase-ce.yml
     with:
       cache_key: oceanbase-ce
