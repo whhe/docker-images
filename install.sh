@@ -27,6 +27,11 @@ sudo sed -i "s/^root_pwd=\".*\"/root_pwd=\"$DATABASE_PASSWORD\"/" /etc/oceanbase
 sudo chown root /home/admin/oceanbase/etc
 sudo systemctl start oceanbase
 
+function check_tenant_connectable {
+	obclient -h127.0.0.1 -uroot -p123456 -e "SELECT svr_ip FROM oceanbase.__all_server"
+	return $?
+}
+
 function wait_tenant_connectable {
 	echo "check tenant connectable"
 	for i in {1..60}; do
@@ -37,11 +42,6 @@ function wait_tenant_connectable {
 		fi
 	done
 	return 1
-}
-
-function check_tenant_connectable {
-	obclient -h127.0.0.1 -uroot -p123456 -e "SELECT svr_ip FROM oceanbase.__all_server"
-	return $?
 }
 
 wait_tenant_connectable
