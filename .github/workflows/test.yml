@@ -1,0 +1,16 @@
+name: release latest oblogproxy-ce
+
+on:
+  push:
+    branches:
+      - test
+
+jobs:
+  release-latest-oblogproxy-ce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Test
+        run: sh install.sh
